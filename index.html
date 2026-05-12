@@ -227,27 +227,54 @@
       display: flex; flex-direction: column; justify-content: center;
       padding-top: calc(var(--nav-h) + 3rem);
       position: relative; overflow: hidden;
+      background: linear-gradient(
+        -45deg,
+        #fff0f8, #fff5ec, #ffecd5, #fff0f5,
+        #fde8ff, #ffe8f0, #fff4e0, #f8f0ff
+      );
+      background-size: 400% 400%;
+      animation: heroGrad 14s ease infinite;
+    }
+    html.dark #hero {
+      background: linear-gradient(
+        -45deg,
+        #12080e, #150c06, #180e04, #100810,
+        #14060e, #16090a, #0e0810, #12060c
+      );
+      background-size: 400% 400%;
+      animation: heroGrad 14s ease infinite;
+    }
+    @keyframes heroGrad {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .hero-glow {
       position: absolute; border-radius: 50%;
-      pointer-events: none; filter: blur(80px);
+      pointer-events: none; filter: blur(70px);
     }
     .hero-glow-1 {
-      width: 600px; height: 600px;
-      top: -15%; right: -8%;
-      background: radial-gradient(circle, var(--hero-glow1) 0%, transparent 70%);
+      width: 700px; height: 700px;
+      top: -20%; right: -10%;
+      background: radial-gradient(circle, rgba(255,111,168,.28) 0%, rgba(255,123,78,.12) 50%, transparent 75%);
       animation: drift 10s ease-in-out infinite alternate;
     }
     .hero-glow-2 {
-      width: 500px; height: 500px;
-      bottom: -10%; left: -5%;
-      background: radial-gradient(circle, var(--hero-glow2) 0%, transparent 70%);
+      width: 600px; height: 600px;
+      bottom: -15%; left: -8%;
+      background: radial-gradient(circle, rgba(255,179,71,.22) 0%, rgba(255,111,168,.1) 55%, transparent 75%);
       animation: drift 13s ease-in-out infinite alternate-reverse;
+    }
+    .hero-glow-3 {
+      width: 400px; height: 400px;
+      top: 30%; left: 40%;
+      background: radial-gradient(circle, rgba(200,140,255,.12) 0%, transparent 70%);
+      animation: drift 16s ease-in-out infinite alternate;
     }
     @keyframes drift {
       from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(40px,30px) scale(1.1); }
+      to   { transform: translate(40px,30px) scale(1.12); }
     }
 
     .hero-grid-line { position: absolute; background: var(--border); opacity: .6; }
@@ -496,7 +523,18 @@
       background: var(--surface2);
       border: 1px solid var(--border);
       padding: .18rem .55rem; border-radius: 50px;
+      font-weight: 500;
     }
+    /* ─── Color-coded category tags ─── */
+    .tag-branding   { color: #d6185a; background: rgba(214,24,90,.08);   border-color: rgba(214,24,90,.22); }
+    .tag-identity   { color: #d6185a; background: rgba(214,24,90,.08);   border-color: rgba(214,24,90,.22); }
+    .tag-ux         { color: #e8522a; background: rgba(232,82,42,.08);   border-color: rgba(232,82,42,.22); }
+    .tag-ui         { color: #e8522a; background: rgba(232,82,42,.08);   border-color: rgba(232,82,42,.22); }
+    .tag-product    { color: #0ea87a; background: rgba(14,168,122,.08);  border-color: rgba(14,168,122,.22); }
+    .tag-print      { color: #b36c00; background: rgba(179,108,0,.08);   border-color: rgba(179,108,0,.22); }
+    .tag-typography { color: #b36c00; background: rgba(179,108,0,.08);   border-color: rgba(179,108,0,.22); }
+    .tag-illustration { color: #7c3aed; background: rgba(124,58,237,.08); border-color: rgba(124,58,237,.22); }
+    .tag-digital    { color: #7c3aed; background: rgba(124,58,237,.08);  border-color: rgba(124,58,237,.22); }
     .project-year {
       font-family: 'Helvetica Neue', sans-serif;
       font-size: .7rem; color: var(--muted);
@@ -721,12 +759,52 @@
     #back-top.visible { opacity: 1; transform: translateY(0) scale(1); }
     #back-top svg { width: 18px; height: 18px; stroke: #fff; }
 
-    /* ─── Reveal ─── */
+    /* ─── Reveal variants ─── */
     .reveal {
-      opacity: 0; transform: translateY(26px);
-      transition: opacity .7s ease, transform .7s ease;
+      opacity: 0; transform: translateY(32px);
+      transition: opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1);
     }
-    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-scale {
+      opacity: 0; transform: scale(.93) translateY(20px);
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible,
+    .reveal-left.visible,
+    .reveal-right.visible,
+    .reveal-scale.visible { opacity: 1; transform: none; }
+
+    /* ─── Hero entrance (fires on load, not scroll) ─── */
+    .hero-badge    { animation: heroIn .7s cubic-bezier(.22,1,.36,1) .15s both; }
+    .hero-eyebrow  { animation: heroIn .7s cubic-bezier(.22,1,.36,1) .3s  both; }
+    .hero-title    { animation: heroIn .9s cubic-bezier(.22,1,.36,1) .45s both; }
+    .hero-sub      { animation: heroIn .7s cubic-bezier(.22,1,.36,1) .65s both; }
+    .hero-actions  { animation: heroIn .7s cubic-bezier(.22,1,.36,1) .8s  both; }
+    .hero-scroll-hint { animation: heroIn .6s cubic-bezier(.22,1,.36,1) 1.1s both; }
+
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Section heading wipe ─── */
+    .heading-reveal {
+      overflow: hidden; display: inline-block;
+    }
+    .heading-reveal span {
+      display: inline-block;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform .85s cubic-bezier(.22,1,.36,1), opacity .5s ease;
+    }
+    .heading-reveal.visible span { transform: translateY(0); opacity: 1; }
   </style>
 </head>
 <body>
@@ -803,6 +881,7 @@
   <section id="hero">
     <div class="hero-glow hero-glow-1"></div>
     <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-glow hero-glow-3"></div>
     <div class="hero-grid-line v"></div>
     <div class="hero-grid-line v"></div>
     <div class="hero-grid-line h"></div>
@@ -878,7 +957,7 @@
 
     <div class="projects-grid" id="projectsGrid">
 
-      <div class="project-card reveal" data-category="branding">
+      <div class="project-card reveal-scale" data-category="branding">
         <div class="project-img">
           <div class="project-img-inner">
             <div class="proj-visual proj-visual-1">
@@ -903,7 +982,7 @@
         </div>
         <div class="project-info">
           <div class="project-meta">
-            <div class="project-tags"><span class="tag">Branding</span><span class="tag">Identity</span></div>
+            <div class="project-tags"><span class="tag tag-branding">Branding</span><span class="tag tag-identity">Identity</span></div>
             <span class="project-year">2024</span>
           </div>
           <h3 class="project-title">Feedbird Brand Identity</h3>
@@ -938,7 +1017,7 @@
         </div>
         <div class="project-info">
           <div class="project-meta">
-            <div class="project-tags"><span class="tag">Print</span><span class="tag">Typography</span></div>
+            <div class="project-tags"><span class="tag tag-print">Print</span><span class="tag tag-typography">Typography</span></div>
             <span class="project-year">2024</span>
           </div>
           <h3 class="project-title">Typographic Poster Series</h3>
@@ -972,7 +1051,7 @@
         </div>
         <div class="project-info">
           <div class="project-meta">
-            <div class="project-tags"><span class="tag">Illustration</span><span class="tag">Digital Art</span></div>
+            <div class="project-tags"><span class="tag tag-illustration">Illustration</span><span class="tag tag-digital">Digital Art</span></div>
             <span class="project-year">2023</span>
           </div>
           <h3 class="project-title">Movie Poster — Original Concept</h3>
@@ -1011,7 +1090,7 @@
         </div>
         <div class="project-info">
           <div class="project-meta">
-            <div class="project-tags"><span class="tag">UX/UI</span><span class="tag">Product</span></div>
+            <div class="project-tags"><span class="tag tag-ux">UX/UI</span><span class="tag tag-product">Product</span></div>
             <span class="project-year">2023</span>
           </div>
           <h3 class="project-title">Mainbot — Dashboard Design</h3>
@@ -1063,7 +1142,7 @@
   <!-- ─── ABOUT ─── -->
   <section id="about">
     <div class="about-grid">
-      <div class="about-left reveal">
+      <div class="about-left reveal-left">
         <p class="section-label">Who I am</p>
         <h2>About Me</h2>
         <br>
@@ -1086,7 +1165,7 @@
         </div>
       </div>
 
-      <div class="about-right reveal">
+      <div class="about-right reveal-right">
         <p class="section-label" style="margin-bottom:1.5rem;">Capabilities</p>
         <div class="skill-row"><span class="skill-name">UX Research &amp; Strategy</span><div class="skill-bar-wrap"><div class="skill-bar" style="--w:.90"></div></div></div>
         <div class="skill-row"><span class="skill-name">Interaction Design</span><div class="skill-bar-wrap"><div class="skill-bar" style="--w:.88"></div></div></div>
@@ -1115,7 +1194,7 @@
   <!-- ─── CONTACT ─── -->
   <section id="contact">
     <div class="contact-wrap">
-      <div class="contact-left reveal">
+      <div class="contact-left reveal-left">
         <p class="section-label">Get in touch</p>
         <h2>Let's build<br>something great.</h2>
         <p>
@@ -1226,8 +1305,8 @@
       el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
     });
 
-    /* ─── Reveal on scroll ─── */
-    const allReveal = document.querySelectorAll('.reveal');
+    /* ─── Reveal on scroll (all variants) ─── */
+    const allReveal = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
 
     function showReveal(el) { el.classList.add('visible'); }
 
@@ -1237,15 +1316,35 @@
       });
     }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
 
+    /* Stagger siblings inside grids */
+    document.querySelectorAll('.projects-grid, .process-grid, .stats-grid').forEach(grid => {
+      [...grid.children].forEach((child, i) => {
+        child.style.transitionDelay = i * 0.1 + 's';
+      });
+    });
+
     allReveal.forEach((el, i) => {
-      el.style.transitionDelay = (i % 4) * 0.07 + 's';
+      if (!el.closest('.projects-grid, .process-grid, .stats-grid')) {
+        el.style.transitionDelay = (i % 3) * 0.08 + 's';
+      }
       revealObs.observe(el);
     });
 
-    /* Fallback: if observer never fires (e.g. iframe preview), reveal everything */
+    /* Fallback for preview iframes */
     setTimeout(() => {
       allReveal.forEach(el => { if (!el.classList.contains('visible')) showReveal(el); });
     }, 800);
+
+    /* ─── Hero parallax on scroll ─── */
+    const heroContent = document.querySelector('.hero-content');
+    const heroBadge   = document.querySelector('.hero-badge');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight && heroContent) {
+        heroContent.style.transform = `translateY(${y * 0.18}px)`;
+        heroContent.style.opacity   = 1 - y / (window.innerHeight * 0.75);
+      }
+    }, { passive: true });
 
     /* ─── Skill bars ─── */
     const skillObs = new IntersectionObserver(entries => {
