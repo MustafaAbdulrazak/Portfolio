@@ -1351,10 +1351,12 @@
     (function() {
       const canvas = document.getElementById('heroCanvas');
       const ctx    = canvas.getContext('2d');
-      const COLORS = ['#818cf8','#a855f7','#6366f1','#c084fc','#60a5fa'];
-      const RING_R     = 140;
-      const RING_COUNT = 88;
-      const FIELD_COUNT = 140;
+
+      const COLORS      = ['#818cf8','#a855f7','#6366f1','#c084fc','#60a5fa'];
+      const RING_R      = 140;
+      const RING_COUNT  = 100;
+      const FIELD_COUNT = 2000;
+      const GLOW_RADIUS = 180; // px around mouse that gets glow
 
       let field = [], ring = [];
       let ringCx = 0, ringCy = 0, ringTx = 0, ringTy = 0;
@@ -1367,65 +1369,80 @@
         field = []; ring = [];
         const W = canvas.width, H = canvas.height;
         const baseX = W > 800 ? W * 0.67 : W * 0.5;
-        const baseY = H * 0.5;
         ringCx = ringTx = baseX;
-        ringCy = ringTy = baseY;
+        ringCy = ringTy = H * 0.5;
 
         for (let i = 0; i < FIELD_COUNT; i++)
-          field.push({ x: rnd(0,W), y: rnd(0,H), r: rnd(.5,2), color: col(), phase: rnd(0,Math.PI*2), freq: rnd(.2,.5) });
+          field.push({ x: rnd(0,W), y: rnd(0,H), r: rnd(.4,1.6),
+                       ci: Math.floor(Math.random()*COLORS.length),
+                       phase: rnd(0,Math.PI*2), freq: rnd(.15,.45) });
 
         for (let i = 0; i < RING_COUNT; i++) {
           const angle = (i / RING_COUNT) * Math.PI * 2;
-          ring.push({ angle, rOff: rnd(-12,12), r: rnd(1.2,2.8), color: col(), phase: rnd(0,Math.PI*2), freq: rnd(.15,.35) });
+          ring.push({ angle, rOff: rnd(-14,14), r: rnd(1.2,2.8),
+                      ci: Math.floor(Math.random()*COLORS.length),
+                      phase: rnd(0,Math.PI*2), freq: rnd(.12,.3) });
         }
-      }
-
-      function dot(x, y, r, color, glow, alpha) {
-        ctx.save();
-        ctx.globalAlpha = alpha * 0.35;
-        ctx.shadowBlur  = glow * 2.5;
-        ctx.shadowColor = color;
-        ctx.fillStyle   = color;
-        ctx.beginPath(); ctx.arc(x, y, r * 2.5, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = alpha;
-        ctx.shadowBlur  = glow;
-        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
       }
 
       function tick(t) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const time = t * 0.001;
         const W = canvas.width, H = canvas.height;
+        const hasMouse = mouse.x > 0;
 
-        // Ring follows mouse gently
+        // Update ring target
         const baseX = W > 800 ? W * 0.67 : W * 0.5;
-        const baseY = H * 0.5;
-        if (mouse.x > 0) {
-          ringTx = baseX + (mouse.x - W * 0.5) * 0.07;
-          ringTy = baseY + (mouse.y - H * 0.5) * 0.06;
-        } else { ringTx = baseX; ringTy = baseY; }
+        ringTx = hasMouse ? baseX + (mouse.x - W*0.5) * 0.07 : baseX;
+        ringTy = hasMouse ? H*0.5 + (mouse.y - H*0.5) * 0.06 : H*0.5;
         ringCx += (ringTx - ringCx) * 0.045;
         ringCy += (ringTy - ringCy) * 0.045;
 
-        // Field dots
+        // ── Pass 1: draw all field dots as plain circles (fast, no shadowBlur)
+        ctx.shadowBlur = 0;
         for (const d of field) {
-          const pulse  = 0.25 + 0.2 * Math.sin(time * d.freq + d.phase);
-          const mDist  = Math.hypot(d.x - mouse.x, d.y - mouse.y);
-          const mBoost = mouse.x > 0 ? Math.max(0, 1 - mDist / 160) * 0.5 : 0;
-          dot(d.x, d.y, d.r, d.color, 5 + mBoost * 10, pulse + mBoost);
+          const pulse = 0.18 + 0.14 * Math.sin(time * d.freq + d.phase);
+          ctx.globalAlpha = pulse;
+          ctx.fillStyle   = COLORS[d.ci];
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fill();
         }
 
-        // Ring dots
+        // ── Pass 2: glow boost for dots near mouse (small subset)
+        if (hasMouse) {
+          for (const d of field) {
+            const dist = Math.hypot(d.x - mouse.x, d.y - mouse.y);
+            if (dist > GLOW_RADIUS) continue;
+            const boost = 1 - dist / GLOW_RADIUS;
+            ctx.shadowBlur  = 12 * boost;
+            ctx.shadowColor = COLORS[d.ci];
+            ctx.globalAlpha = 0.7 * boost;
+            ctx.fillStyle   = COLORS[d.ci];
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, d.r * (1 + boost), 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.shadowBlur = 0;
+        }
+
+        // ── Pass 3: ring dots (always glowing)
         for (const d of ring) {
-          const pulse = 0.5 + 0.28 * Math.sin(time * d.freq + d.phase);
+          const pulse = 0.55 + 0.3 * Math.sin(time * d.freq + d.phase);
           const rx = ringCx + Math.cos(d.angle) * (RING_R + d.rOff);
           const ry = ringCy + Math.sin(d.angle) * (RING_R + d.rOff);
-          const mDist  = Math.hypot(rx - mouse.x, ry - mouse.y);
-          const mBoost = mouse.x > 0 ? Math.max(0, 1 - mDist / 150) * 0.9 : 0;
-          dot(rx, ry, d.r, d.color, 9 + mBoost * 16, pulse + mBoost);
+          const mBoost = hasMouse ? Math.max(0, 1 - Math.hypot(rx-mouse.x, ry-mouse.y) / 160) : 0;
+          ctx.shadowBlur  = 8 + mBoost * 18;
+          ctx.shadowColor = COLORS[d.ci];
+          ctx.globalAlpha = pulse + mBoost * 0.6;
+          ctx.fillStyle   = COLORS[d.ci];
+          ctx.beginPath();
+          ctx.arc(rx, ry, d.r * (1 + mBoost * 0.5), 0, Math.PI * 2);
+          ctx.fill();
         }
 
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
         requestAnimationFrame(tick);
       }
 
