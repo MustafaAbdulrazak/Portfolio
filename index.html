@@ -6,7 +6,7 @@
   <title>Mustafa Saffa — UX Designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Lexend:wght@300;400;500&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -179,6 +179,53 @@
     .icon-moon { display: none; }
     html.dark .icon-sun  { display: none; }
     html.dark .icon-moon { display: block; }
+
+    /* ─── Dyslexia toggle button ─── */
+    .dyslexia-toggle {
+      width: 36px; height: 36px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Georgia', serif;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: -.03em;
+      transition: background .3s, border-color .3s, color .3s;
+    }
+    .dyslexia-toggle:hover { background: var(--surface); color: var(--text); }
+    html.dyslexic .dyslexia-toggle {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ─── Dyslexia mode overrides ─── */
+    html.dyslexic body,
+    html.dyslexic p,
+    html.dyslexic li,
+    html.dyslexic span,
+    html.dyslexic a,
+    html.dyslexic input,
+    html.dyslexic textarea,
+    html.dyslexic button,
+    html.dyslexic label {
+      font-family: 'Lexend', sans-serif !important;
+      letter-spacing: .04em;
+      word-spacing: .18em;
+      line-height: 1.95;
+    }
+    html.dyslexic h1,
+    html.dyslexic h2,
+    html.dyslexic h3,
+    html.dyslexic h4 {
+      font-family: 'Lexend', sans-serif !important;
+      letter-spacing: .02em;
+      line-height: 1.25;
+    }
 
     .nav-toggle {
       display: none; background: none; border: none;
@@ -826,6 +873,8 @@
         <li><a href="#contact" onclick="closeNav()">Contact</a></li>
       </ul>
 
+      <button class="dyslexia-toggle" id="dyslexiaToggle" aria-label="Toggle dyslexia-friendly font" onclick="toggleDyslexia()" title="Dyslexia-friendly text">Aa</button>
+
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
         <!-- sun: visible in light mode, click to go dark -->
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1227,6 +1276,12 @@
       const d = document.documentElement.classList.toggle('dark');
       localStorage.setItem('theme', d ? 'dark' : 'light');
     }
+
+    function toggleDyslexia(){
+      const on = document.documentElement.classList.toggle('dyslexic');
+      localStorage.setItem('dyslexic', on ? '1' : '0');
+    }
+    if (localStorage.getItem('dyslexic') === '1') document.documentElement.classList.add('dyslexic');
 
     /* ─── Mobile nav ─── */
     function toggleNav(){ document.getElementById('navLinks').classList.toggle('open'); }
