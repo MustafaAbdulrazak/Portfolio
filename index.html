@@ -203,7 +203,7 @@
       color: #fff;
     }
 
-    /* ─── Dyslexia mode overrides ─── */
+    /* ─── Dyslexia mode overrides (BDA-aligned) ─── */
     html.dyslexic body,
     html.dyslexic p,
     html.dyslexic li,
@@ -214,17 +214,28 @@
     html.dyslexic button,
     html.dyslexic label {
       font-family: 'Lexend', sans-serif !important;
-      letter-spacing: .04em;
+      font-style: normal !important;
+      font-size: 1.08em;
+      letter-spacing: .035em;
       word-spacing: .18em;
-      line-height: 1.95;
+      line-height: 2;
+      text-align: left !important;
+      text-decoration: none !important;
     }
     html.dyslexic h1,
     html.dyslexic h2,
     html.dyslexic h3,
     html.dyslexic h4 {
       font-family: 'Lexend', sans-serif !important;
-      letter-spacing: .02em;
-      line-height: 1.25;
+      font-style: normal !important;
+      letter-spacing: .025em;
+      line-height: 1.3;
+      text-align: left !important;
+    }
+    html.dyslexic em,
+    html.dyslexic i {
+      font-style: normal !important;
+      font-weight: 500;
     }
 
     .nav-toggle {
