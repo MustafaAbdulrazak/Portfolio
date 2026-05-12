@@ -237,9 +237,9 @@
       position: absolute; inset: 0;
       width: 100%; height: 100%;
       pointer-events: none;
-      opacity: 0.32;
+      opacity: 0.18;
     }
-    html.dark .hero-canvas { opacity: 0.75; }
+    html.dark .hero-canvas { opacity: 0.55; }
 
 
     .hero-content {
@@ -1227,59 +1227,57 @@
       el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
     });
 
-    /* ─── Hero pixel canvas (MIT poster style, mouse-reactive) ─── */
+    /* ─── Hero pixel canvas (MIT poster style, wave on mouse) ─── */
     (function() {
       const canvas = document.getElementById('heroCanvas');
       const ctx    = canvas.getContext('2d');
-      const CELL   = 22;   // pixel block size
-      const GAP    = 2;    // gap between blocks
-      const RADIUS = 130;  // mouse influence radius
-      const PUSH   = 38;   // max displacement
-      const SPRING = 0.14;
-      const DAMP   = 0.72;
+      const CELL   = 8;    // tight pixel blocks
+      const GAP    = 1;    // 1px gap
+      const STEP   = CELL + GAP;
 
-      // MIT poster stripe palette: groups of columns share a color family
-      // null = transparent (show background)
-      const STRIPE_COLORS = [
-        null, null,
-        '#b8d400','#c8e010',
-        null,
-        '#00c4d8','#0090c0','#006898',
-        null, null,
-        '#0055cc','#004098',
-        null,
-        '#00a845','#60d080',
-        null, null,
-        '#00c4d8','#0090c0',
-        null,
-        '#b8d400','#d4ec10',
-        null, null,
-        '#004898','#0060b8','#0090c0',
-        null,
-        '#b8d400',
-        null, null,
+      // Wave params
+      const WAVE_SPEED  = 180; // px/s outward travel
+      const WAVE_AMP    = 7;   // max displacement px
+      const WAVE_WIDTH  = 55;  // band half-width
+      const PULSE_TTL   = 1800; // ms a pulse lives
+
+      // MIT poster stripe pattern: [color|null, widthInCols]
+      const PATTERN = [
+        [null,       3],
+        ['#b8d400',  2], ['#c8e010', 1],
+        [null,       2],
+        ['#00c4d8',  2], ['#0090c0', 2], ['#006898', 1],
+        [null,       3],
+        ['#0055cc',  2], ['#003d99', 1],
+        [null,       2],
+        ['#00a845',  1], ['#60d080', 1],
+        [null,       4],
+        ['#0090c0',  1], ['#00c4d8', 2],
+        [null,       2],
+        ['#b8d400',  1], ['#d4ec10', 1],
+        [null,       3],
+        ['#004898',  2], ['#0060b8', 1], ['#0090c0', 1],
+        [null,       3],
       ];
 
-      const mouse = { x: -9999, y: -9999 };
-      let cells = [];
-      let raf;
+      // Expand pattern to per-column color array (repeating)
+      const COL_COLORS = [];
+      for (const [col, w] of PATTERN) for (let i = 0; i < w; i++) COL_COLORS.push(col);
+      const PAT_LEN = COL_COLORS.length;
+
+      let cells  = [];
+      let pulses = []; // {x,y,t}
+      let lastPx = -9999, lastPy = -9999;
 
       function buildCells() {
         cells = [];
-        const cols = Math.ceil(canvas.width  / (CELL + GAP)) + 1;
-        const rows = Math.ceil(canvas.height / (CELL + GAP)) + 1;
-        const len  = STRIPE_COLORS.length;
+        const cols = Math.ceil(canvas.width  / STEP) + 1;
+        const rows = Math.ceil(canvas.height / STEP) + 1;
         for (let c = 0; c < cols; c++) {
-          const color = STRIPE_COLORS[c % len];
-          if (!color) continue; // skip transparent columns
+          const color = COL_COLORS[c % PAT_LEN];
+          if (!color) continue;
           for (let r = 0; r < rows; r++) {
-            cells.push({
-              bx: c * (CELL + GAP),
-              by: r * (CELL + GAP),
-              color,
-              dx: 0, dy: 0,
-              vx: 0, vy: 0,
-            });
+            cells.push({ bx: c * STEP, by: r * STEP, color });
           }
         }
       }
@@ -1293,45 +1291,43 @@
 
       function tick() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const now = performance.now();
+        pulses = pulses.filter(p => now - p.t < PULSE_TTL);
+
         for (const c of cells) {
-          const cx = c.bx + CELL / 2;
-          const cy = c.by + CELL / 2;
-          const ddx = cx - mouse.x;
-          const ddy = cy - mouse.y;
-          const dist = Math.sqrt(ddx * ddx + ddy * ddy);
-
-          let tx = 0, ty = 0;
-          if (dist < RADIUS && dist > 0) {
-            const f = (1 - dist / RADIUS) * PUSH;
-            tx = (ddx / dist) * f;
-            ty = (ddy / dist) * f;
+          let dx = 0, dy = 0;
+          for (const p of pulses) {
+            const ex = c.bx - p.x, ey = c.by - p.y;
+            const dist = Math.sqrt(ex * ex + ey * ey);
+            if (dist < 1) continue;
+            const age       = (now - p.t) / 1000;
+            const front     = age * WAVE_SPEED;
+            const fromFront = dist - front;
+            if (Math.abs(fromFront) > WAVE_WIDTH) continue;
+            const envelope = Math.exp(-(fromFront * fromFront) / (WAVE_WIDTH * WAVE_WIDTH * 0.5));
+            const decay    = Math.max(0, 1 - age / (PULSE_TTL / 1000));
+            const push     = Math.sin(fromFront / WAVE_WIDTH * Math.PI) * WAVE_AMP * envelope * decay;
+            dx += (ex / dist) * push;
+            dy += (ey / dist) * push;
           }
-
-          const ax = (tx - c.dx) * SPRING;
-          const ay = (ty - c.dy) * SPRING;
-          c.vx = (c.vx + ax) * DAMP;
-          c.vy = (c.vy + ay) * DAMP;
-          c.dx += c.vx;
-          c.dy += c.vy;
-
           ctx.fillStyle = c.color;
-          ctx.fillRect(c.bx + c.dx, c.by + c.dy, CELL, CELL);
+          ctx.fillRect(c.bx + dx, c.by + dy, CELL, CELL);
         }
-        raf = requestAnimationFrame(tick);
+        requestAnimationFrame(tick);
       }
 
       const heroEl = document.getElementById('hero');
       heroEl.addEventListener('mousemove', e => {
         const rect = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const d  = Math.hypot(mx - lastPx, my - lastPy);
+        if (d > 18) {
+          pulses.push({ x: mx, y: my, t: performance.now() });
+          if (pulses.length > 8) pulses.shift();
+          lastPx = mx; lastPy = my;
+        }
       });
-      heroEl.addEventListener('mouseleave', () => {
-        mouse.x = -9999; mouse.y = -9999;
-      });
-
-      // make canvas pointer-events none but track on hero section
-      canvas.style.pointerEvents = 'none';
 
       window.addEventListener('resize', resize);
       resize();
