@@ -315,6 +315,12 @@
       100% { background-position: 0% 0%; }
     }
 
+    .hero-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
     .hero-glow {
       position: absolute; border-radius: 50%;
       pointer-events: none; filter: blur(80px);
@@ -929,6 +935,7 @@
 
   <!-- ─── HERO ─── -->
   <section id="hero">
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
     <div class="hero-glow hero-glow-1"></div>
     <div class="hero-glow hero-glow-2"></div>
     <div class="hero-glow hero-glow-3"></div>
@@ -1339,6 +1346,108 @@
       el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
     });
+
+    /* ─── Hero dot field + ring canvas ─── */
+    (function() {
+      const canvas = document.getElementById('heroCanvas');
+      const ctx    = canvas.getContext('2d');
+      const COLORS = ['#818cf8','#a855f7','#6366f1','#c084fc','#60a5fa'];
+      const RING_R     = 140;
+      const RING_COUNT = 88;
+      const FIELD_COUNT = 140;
+
+      let field = [], ring = [];
+      let ringCx = 0, ringCy = 0, ringTx = 0, ringTy = 0;
+      let mouse = { x: -9999, y: -9999 };
+
+      function rnd(a, b) { return a + Math.random() * (b - a); }
+      function col() { return COLORS[Math.floor(Math.random() * COLORS.length)]; }
+
+      function build() {
+        field = []; ring = [];
+        const W = canvas.width, H = canvas.height;
+        const baseX = W > 800 ? W * 0.67 : W * 0.5;
+        const baseY = H * 0.5;
+        ringCx = ringTx = baseX;
+        ringCy = ringTy = baseY;
+
+        for (let i = 0; i < FIELD_COUNT; i++)
+          field.push({ x: rnd(0,W), y: rnd(0,H), r: rnd(.5,2), color: col(), phase: rnd(0,Math.PI*2), freq: rnd(.2,.5) });
+
+        for (let i = 0; i < RING_COUNT; i++) {
+          const angle = (i / RING_COUNT) * Math.PI * 2;
+          ring.push({ angle, rOff: rnd(-12,12), r: rnd(1.2,2.8), color: col(), phase: rnd(0,Math.PI*2), freq: rnd(.15,.35) });
+        }
+      }
+
+      function dot(x, y, r, color, glow, alpha) {
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.35;
+        ctx.shadowBlur  = glow * 2.5;
+        ctx.shadowColor = color;
+        ctx.fillStyle   = color;
+        ctx.beginPath(); ctx.arc(x, y, r * 2.5, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = alpha;
+        ctx.shadowBlur  = glow;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+
+      function tick(t) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const time = t * 0.001;
+        const W = canvas.width, H = canvas.height;
+
+        // Ring follows mouse gently
+        const baseX = W > 800 ? W * 0.67 : W * 0.5;
+        const baseY = H * 0.5;
+        if (mouse.x > 0) {
+          ringTx = baseX + (mouse.x - W * 0.5) * 0.07;
+          ringTy = baseY + (mouse.y - H * 0.5) * 0.06;
+        } else { ringTx = baseX; ringTy = baseY; }
+        ringCx += (ringTx - ringCx) * 0.045;
+        ringCy += (ringTy - ringCy) * 0.045;
+
+        // Field dots
+        for (const d of field) {
+          const pulse  = 0.25 + 0.2 * Math.sin(time * d.freq + d.phase);
+          const mDist  = Math.hypot(d.x - mouse.x, d.y - mouse.y);
+          const mBoost = mouse.x > 0 ? Math.max(0, 1 - mDist / 160) * 0.5 : 0;
+          dot(d.x, d.y, d.r, d.color, 5 + mBoost * 10, pulse + mBoost);
+        }
+
+        // Ring dots
+        for (const d of ring) {
+          const pulse = 0.5 + 0.28 * Math.sin(time * d.freq + d.phase);
+          const rx = ringCx + Math.cos(d.angle) * (RING_R + d.rOff);
+          const ry = ringCy + Math.sin(d.angle) * (RING_R + d.rOff);
+          const mDist  = Math.hypot(rx - mouse.x, ry - mouse.y);
+          const mBoost = mouse.x > 0 ? Math.max(0, 1 - mDist / 150) * 0.9 : 0;
+          dot(rx, ry, d.r, d.color, 9 + mBoost * 16, pulse + mBoost);
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      function resize() {
+        const hero = document.getElementById('hero');
+        canvas.width  = hero.offsetWidth;
+        canvas.height = hero.offsetHeight;
+        build();
+      }
+
+      const heroEl = document.getElementById('hero');
+      heroEl.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      heroEl.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+
+      window.addEventListener('resize', resize);
+      resize();
+      requestAnimationFrame(tick);
+    })();
 
     /* ─── Reveal on scroll (all variants) ─── */
     const allReveal = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
