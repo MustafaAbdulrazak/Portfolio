@@ -232,56 +232,14 @@
     }
     html.dark #hero { background: #000e1c; }
 
-    /* ─── MIT-poster vertical bars ─── */
-    .hero-bars {
+    /* ─── MIT-poster pixel canvas ─── */
+    .hero-canvas {
       position: absolute; inset: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
-      background: linear-gradient(90deg,
-        #b8d400 0px,   #b8d400 5px,
-        #d4ec10 5px,   #d4ec10 8px,
-        #f0f840 8px,   #f0f840 10px,
-        transparent    10px,  transparent 24px,
-        #00c4d8 24px,  #00c4d8 29px,
-        #0090c0 29px,  #0090c0 34px,
-        #004898 34px,  #004898 40px,
-        transparent    40px,  transparent 58px,
-        #00a845 58px,  #00a845 62px,
-        #60d080 62px,  #60d080 65px,
-        #b8d400 65px,  #b8d400 68px,
-        transparent    68px,  transparent 90px,
-        #0060b8 90px,  #0060b8 97px,
-        #0090c0 97px,  #0090c0 102px,
-        #00c4d8 102px, #00c4d8 106px,
-        transparent    106px, transparent 132px,
-        #d4ec10 132px, #d4ec10 136px,
-        #f0f840 136px, #f0f840 138px,
-        #b8d400 138px, #b8d400 142px,
-        transparent    142px, transparent 164px,
-        #00c4d8 164px, #00c4d8 170px,
-        #0090c0 170px, #0090c0 175px,
-        transparent    175px, transparent 198px,
-        #00a845 198px, #00a845 203px,
-        #40c870 203px, #40c870 207px,
-        transparent    207px, transparent 230px,
-        #004898 230px, #004898 238px,
-        #0060b8 238px, #0060b8 244px,
-        #0090c0 244px, #0090c0 248px,
-        transparent    248px, transparent 274px,
-        #b8d400 274px, #b8d400 278px,
-        #d4ec10 278px, #d4ec10 281px,
-        transparent    281px, transparent 300px
-      );
-      background-size: 300px 100%;
-      animation: barsMove 10s linear infinite;
-      will-change: background-position;
-      opacity: 0.28;
+      opacity: 0.32;
     }
-    html.dark .hero-bars { opacity: 0.7; }
-
-    @keyframes barsMove {
-      from { background-position: 0 0; }
-      to   { background-position: 300px 0; }
-    }
+    html.dark .hero-canvas { opacity: 0.75; }
 
 
     .hero-content {
@@ -846,7 +804,7 @@
 
   <!-- ─── HERO ─── -->
   <section id="hero">
-    <div class="hero-bars"></div>
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
 
     <div class="hero-content">
       <div class="hero-badge">
@@ -1268,6 +1226,117 @@
       el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
     });
+
+    /* ─── Hero pixel canvas (MIT poster style, mouse-reactive) ─── */
+    (function() {
+      const canvas = document.getElementById('heroCanvas');
+      const ctx    = canvas.getContext('2d');
+      const CELL   = 22;   // pixel block size
+      const GAP    = 2;    // gap between blocks
+      const RADIUS = 130;  // mouse influence radius
+      const PUSH   = 38;   // max displacement
+      const SPRING = 0.14;
+      const DAMP   = 0.72;
+
+      // MIT poster stripe palette: groups of columns share a color family
+      // null = transparent (show background)
+      const STRIPE_COLORS = [
+        null, null,
+        '#b8d400','#c8e010',
+        null,
+        '#00c4d8','#0090c0','#006898',
+        null, null,
+        '#0055cc','#004098',
+        null,
+        '#00a845','#60d080',
+        null, null,
+        '#00c4d8','#0090c0',
+        null,
+        '#b8d400','#d4ec10',
+        null, null,
+        '#004898','#0060b8','#0090c0',
+        null,
+        '#b8d400',
+        null, null,
+      ];
+
+      const mouse = { x: -9999, y: -9999 };
+      let cells = [];
+      let raf;
+
+      function buildCells() {
+        cells = [];
+        const cols = Math.ceil(canvas.width  / (CELL + GAP)) + 1;
+        const rows = Math.ceil(canvas.height / (CELL + GAP)) + 1;
+        const len  = STRIPE_COLORS.length;
+        for (let c = 0; c < cols; c++) {
+          const color = STRIPE_COLORS[c % len];
+          if (!color) continue; // skip transparent columns
+          for (let r = 0; r < rows; r++) {
+            cells.push({
+              bx: c * (CELL + GAP),
+              by: r * (CELL + GAP),
+              color,
+              dx: 0, dy: 0,
+              vx: 0, vy: 0,
+            });
+          }
+        }
+      }
+
+      function resize() {
+        const hero = document.getElementById('hero');
+        canvas.width  = hero.offsetWidth;
+        canvas.height = hero.offsetHeight;
+        buildCells();
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const c of cells) {
+          const cx = c.bx + CELL / 2;
+          const cy = c.by + CELL / 2;
+          const ddx = cx - mouse.x;
+          const ddy = cy - mouse.y;
+          const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+
+          let tx = 0, ty = 0;
+          if (dist < RADIUS && dist > 0) {
+            const f = (1 - dist / RADIUS) * PUSH;
+            tx = (ddx / dist) * f;
+            ty = (ddy / dist) * f;
+          }
+
+          const ax = (tx - c.dx) * SPRING;
+          const ay = (ty - c.dy) * SPRING;
+          c.vx = (c.vx + ax) * DAMP;
+          c.vy = (c.vy + ay) * DAMP;
+          c.dx += c.vx;
+          c.dy += c.vy;
+
+          ctx.fillStyle = c.color;
+          ctx.fillRect(c.bx + c.dx, c.by + c.dy, CELL, CELL);
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      const heroEl = document.getElementById('hero');
+      heroEl.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      heroEl.addEventListener('mouseleave', () => {
+        mouse.x = -9999; mouse.y = -9999;
+      });
+
+      // make canvas pointer-events none but track on hero section
+      canvas.style.pointerEvents = 'none';
+
+      window.addEventListener('resize', resize);
+      resize();
+      tick();
+    })();
 
     /* ─── Reveal on scroll (all variants) ─── */
     const allReveal = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
