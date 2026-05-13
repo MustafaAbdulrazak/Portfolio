@@ -330,30 +330,47 @@
 
     .hero-glow {
       position: absolute; border-radius: 50%;
-      pointer-events: none; filter: blur(80px);
-      will-change: transform;
+      pointer-events: none; filter: blur(90px);
+      will-change: transform, opacity;
     }
     .hero-glow-1 {
-      width: 700px; height: 700px;
-      top: -20%; right: -10%;
-      background: radial-gradient(circle, rgba(99,102,241,.22) 0%, rgba(139,92,246,.1) 45%, transparent 72%);
-      animation: drift 9s ease-in-out infinite alternate;
+      width: 750px; height: 750px;
+      top: -25%; right: -12%;
+      background: radial-gradient(circle, rgba(99,102,241,.28) 0%, rgba(139,92,246,.12) 45%, transparent 72%);
+      animation: glowMove1 14s ease-in-out infinite;
     }
     .hero-glow-2 {
-      width: 650px; height: 650px;
-      bottom: -15%; left: -8%;
-      background: radial-gradient(circle, rgba(20,184,166,.2) 0%, rgba(6,182,212,.08) 48%, transparent 72%);
-      animation: drift 11s ease-in-out infinite alternate-reverse;
+      width: 680px; height: 680px;
+      bottom: -18%; left: -10%;
+      background: radial-gradient(circle, rgba(20,184,166,.24) 0%, rgba(6,182,212,.1) 48%, transparent 72%);
+      animation: glowMove2 17s ease-in-out infinite;
     }
     .hero-glow-3 {
-      width: 480px; height: 480px;
-      top: 30%; left: 38%;
-      background: radial-gradient(circle, rgba(251,113,133,.14) 0%, rgba(244,63,94,.05) 50%, transparent 72%);
-      animation: drift 13s ease-in-out infinite alternate;
+      width: 520px; height: 520px;
+      top: 25%; left: 35%;
+      background: radial-gradient(circle, rgba(251,113,133,.18) 0%, rgba(244,63,94,.07) 50%, transparent 72%);
+      animation: glowMove3 11s ease-in-out infinite;
     }
-    @keyframes drift {
-      from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(45px,35px) scale(1.14); }
+
+    @keyframes glowMove1 {
+      0%   { transform: translate(0,    0)    scale(1);    opacity: .9; }
+      25%  { transform: translate(-80px, 60px) scale(1.18); opacity: 1;  }
+      50%  { transform: translate(-40px, 120px) scale(.92); opacity: .8; }
+      75%  { transform: translate(60px,  80px) scale(1.22); opacity: 1;  }
+      100% { transform: translate(0,    0)    scale(1);    opacity: .9; }
+    }
+    @keyframes glowMove2 {
+      0%   { transform: translate(0,    0)    scale(1);    opacity: .85; }
+      20%  { transform: translate(90px, -70px) scale(1.2);  opacity: 1;   }
+      45%  { transform: translate(140px, 50px) scale(.88);  opacity: .8;  }
+      70%  { transform: translate(60px,  110px) scale(1.15); opacity: 1;  }
+      100% { transform: translate(0,    0)    scale(1);    opacity: .85; }
+    }
+    @keyframes glowMove3 {
+      0%   { transform: translate(0,   0)    scale(1);    opacity: .8;  }
+      33%  { transform: translate(-70px, -90px) scale(1.25); opacity: 1;  }
+      66%  { transform: translate(80px, -60px) scale(.85);  opacity: .75; }
+      100% { transform: translate(0,   0)    scale(1);    opacity: .8;  }
     }
 
 
