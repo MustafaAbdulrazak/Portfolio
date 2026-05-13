@@ -133,7 +133,24 @@
     }
 
     /* ─── Nav right ─── */
-    .nav-right { display:flex; align-items:center; gap:1.8rem; }
+    .nav-right { display:flex; align-items:center; gap:1.4rem; }
+
+    .nav-cv-btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .45rem 1rem;
+      border: 1px solid var(--border); border-radius: 999px;
+      font-size: .72rem; font-weight: 500; letter-spacing: .04em;
+      text-decoration: none; color: var(--text);
+      white-space: nowrap;
+      transition: background .2s, border-color .2s, color .2s, transform .2s;
+    }
+    .nav-cv-btn svg { width: 13px; height: 13px; stroke: var(--muted); transition: stroke .2s; }
+    .nav-cv-btn:hover {
+      background: var(--text); color: var(--bg);
+      border-color: var(--text); transform: translateY(-1px);
+    }
+    .nav-cv-btn:hover svg { stroke: var(--bg); }
+    @media (max-width: 700px) { .nav-cv-btn { display: none; } }
     .nav-icon-group { display:flex; align-items:center; gap:.5rem; }
 
     .nav-links { display:flex; gap:clamp(1rem,2.5vw,2rem); list-style:none; }
@@ -1083,6 +1100,13 @@
         <li><a href="#contact" onclick="closeNav()">Contact</a></li>
       </ul>
 
+      <a href="resume.pdf" download class="nav-cv-btn" aria-label="Download CV">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 2v8M5 7l3 3 3-3"/><rect x="2" y="11" width="12" height="3" rx="1.5"/>
+        </svg>
+        Download CV
+      </a>
+
       <div class="nav-icon-group">
         <button class="dyslexia-toggle" id="dyslexiaToggle" aria-label="Toggle dyslexia-friendly font" onclick="toggleDyslexia()" title="Dyslexia-friendly text">Aa</button>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
@@ -1137,6 +1161,12 @@
           </svg>
         </a>
         <a href="#contact" class="btn-ghost">Get in touch</a>
+        <a href="resume.pdf" download class="btn-ghost btn-cv">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 2v8M5 7l3 3 3-3"/><rect x="2" y="11" width="12" height="3" rx="1.5"/>
+          </svg>
+          Download CV
+        </a>
       </div>
     </div>
 
