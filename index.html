@@ -607,18 +607,19 @@
     .overlay-label svg { width: 14px; height: 14px; }
 
     .proj-visual {
+      /* allow mockup SVG to fill the whole card image area */
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
     }
-    .proj-visual-1 { background: linear-gradient(145deg,#ede8ff,#ddd8ff); }
-    .proj-visual-2 { background: linear-gradient(145deg,#e8eeff,#d8e4ff); }
-    .proj-visual-3 { background: linear-gradient(145deg,#f0e8ff,#dce8ff); }
-    .proj-visual-4 { background: linear-gradient(145deg,#e8f0ff,#e4e0ff); }
-    html.dark .proj-visual-1 { background: linear-gradient(145deg,#14102a,#1a1438); }
-    html.dark .proj-visual-2 { background: linear-gradient(145deg,#101428,#141a34); }
-    html.dark .proj-visual-3 { background: linear-gradient(145deg,#14102e,#101830); }
-    html.dark .proj-visual-4 { background: linear-gradient(145deg,#101428,#16122e); }
-    .proj-visual svg { width: 55%; height: 55%; opacity: .65; }
+    .proj-visual-1 { background: linear-gradient(145deg,#e8f5f0,#c8ede0); }
+    .proj-visual-2 { background: linear-gradient(145deg,#1a1a3e,#2d1b6e); }
+    .proj-visual-3 { background: linear-gradient(145deg,#f5f0ff,#ede0ff); }
+    .proj-visual-4 { background: linear-gradient(145deg,#fff4e8,#ffe8cc); }
+    html.dark .proj-visual-1 { background: linear-gradient(145deg,#0a1f18,#0f2a20); }
+    html.dark .proj-visual-2 { background: linear-gradient(145deg,#0d0d2a,#1a0d40); }
+    html.dark .proj-visual-3 { background: linear-gradient(145deg,#150d2a,#1e1040); }
+    html.dark .proj-visual-4 { background: linear-gradient(145deg,#1f1408,#2a1a0a); }
+    .proj-visual svg { width: 100%; height: 100%; }
 
     .project-num {
       position: absolute; top: 1rem; left: 1rem;
@@ -1169,14 +1170,54 @@
         <div class="project-img">
           <div class="project-img-inner">
             <div class="proj-visual proj-visual-1">
-              <svg viewBox="0 0 120 80" fill="none">
-                <rect x="10" y="15" width="100" height="50" rx="4" stroke="#e8522a" stroke-width="1.2" opacity=".5"/>
-                <rect x="20" y="25" width="35" height="30" rx="2" fill="#e8522a" opacity=".1" stroke="#e8522a" stroke-width=".8"/>
-                <line x1="62" y1="28" x2="95" y2="28" stroke="#e8522a" stroke-width=".8" opacity=".4"/>
-                <line x1="62" y1="36" x2="88" y2="36" stroke="#e8522a" stroke-width=".8" opacity=".25"/>
-                <line x1="62" y1="44" x2="91" y2="44" stroke="#e8522a" stroke-width=".8" opacity=".25"/>
-                <circle cx="22" cy="58" r="4" fill="#ff6fa8" opacity=".5"/>
-                <line x1="32" y1="58" x2="90" y2="58" stroke="#e8522a" stroke-width=".8" opacity=".15"/>
+              <!-- Booknings Basen: laptop with booking calendar UI -->
+              <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Laptop screen body -->
+                <rect x="55" y="18" width="290" height="182" rx="10" fill="#1c1c1e" stroke="#555" stroke-width="2"/>
+                <!-- Screen -->
+                <rect x="64" y="28" width="272" height="162" rx="4" fill="#ffffff"/>
+                <!-- Browser chrome bar -->
+                <rect x="64" y="28" width="272" height="22" rx="4" fill="#f3f3f3"/>
+                <circle cx="76" cy="39" r="4" fill="#ff5f57"/>
+                <circle cx="90" cy="39" r="4" fill="#febc2e"/>
+                <circle cx="104" cy="39" r="4" fill="#28c840"/>
+                <rect x="120" y="33" width="130" height="12" rx="6" fill="#e5e5e5"/>
+                <!-- App nav -->
+                <rect x="64" y="50" width="272" height="20" fill="#1a7a5e"/>
+                <rect x="72" y="55" width="40" height="8" rx="3" fill="rgba(255,255,255,.6)"/>
+                <rect x="270" y="54" width="56" height="10" rx="5" fill="rgba(255,255,255,.25)"/>
+                <!-- Sidebar -->
+                <rect x="64" y="70" width="60" height="120" fill="#f7faf9"/>
+                <rect x="70" y="78" width="44" height="7" rx="3.5" fill="#1a7a5e" opacity=".7"/>
+                <rect x="70" y="92" width="36" height="6" rx="3" fill="#aaa" opacity=".5"/>
+                <rect x="70" y="104" width="40" height="6" rx="3" fill="#aaa" opacity=".4"/>
+                <rect x="70" y="116" width="32" height="6" rx="3" fill="#aaa" opacity=".4"/>
+                <rect x="70" y="128" width="38" height="6" rx="3" fill="#aaa" opacity=".35"/>
+                <rect x="70" y="148" width="44" height="8" rx="4" fill="#1a7a5e" opacity=".15"/>
+                <!-- Main area: calendar header -->
+                <rect x="132" y="70" width="196" height="20" fill="#f0faf6"/>
+                <rect x="140" y="76" width="55" height="8" rx="3" fill="#1a7a5e" opacity=".6"/>
+                <rect x="296" y="74" width="24" height="12" rx="4" fill="#1a7a5e" opacity=".15"/>
+                <!-- Calendar grid header -->
+                <rect x="132" y="92" width="196" height="12" fill="#e8f5f0"/>
+                <text x="144" y="101" fill="#1a7a5e" font-size="6" font-family="sans-serif" opacity=".7">Mon</text>
+                <text x="170" y="101" fill="#1a7a5e" font-size="6" font-family="sans-serif" opacity=".7">Tue</text>
+                <text x="196" y="101" fill="#1a7a5e" font-size="6" font-family="sans-serif" opacity=".7">Wed</text>
+                <text x="222" y="101" fill="#1a7a5e" font-size="6" font-family="sans-serif" opacity=".7">Thu</text>
+                <text x="248" y="101" fill="#1a7a5e" font-size="6" font-family="sans-serif" opacity=".7">Fri</text>
+                <!-- Calendar rows -->
+                <rect x="132" y="106" width="196" height="22" fill="white" stroke="#e8f0ee" stroke-width=".5"/>
+                <rect x="132" y="130" width="196" height="22" fill="#fafafa" stroke="#e8f0ee" stroke-width=".5"/>
+                <rect x="132" y="154" width="196" height="22" fill="white" stroke="#e8f0ee" stroke-width=".5"/>
+                <!-- Booking blocks -->
+                <rect x="139" y="109" width="22" height="16" rx="3" fill="#1a7a5e" opacity=".75"/>
+                <rect x="191" y="109" width="46" height="16" rx="3" fill="#2da882" opacity=".6"/>
+                <rect x="245" y="133" width="22" height="16" rx="3" fill="#1a7a5e" opacity=".5"/>
+                <rect x="139" y="157" width="72" height="16" rx="3" fill="#2da882" opacity=".4"/>
+                <rect x="271" y="109" width="22" height="16" rx="3" fill="#1a7a5e" opacity=".65"/>
+                <!-- Laptop base -->
+                <path d="M20 200 L380 200 L364 218 L36 218 Z" fill="#2a2a2e" stroke="#555" stroke-width="1.5"/>
+                <rect x="170" y="198" width="60" height="5" rx="2.5" fill="#3a3a3e"/>
               </svg>
             </div>
           </div>
@@ -1206,12 +1247,60 @@
         <div class="project-img">
           <div class="project-img-inner">
             <div class="proj-visual proj-visual-2">
-              <svg viewBox="0 0 120 80" fill="none">
-                <rect x="30" y="10" width="60" height="60" rx="30" stroke="#ff6fa8" stroke-width="1" opacity=".45"/>
-                <rect x="42" y="22" width="36" height="36" rx="18" fill="#ff6fa8" opacity=".08" stroke="#ff6fa8" stroke-width=".8"/>
-                <line x1="20" y1="40" x2="100" y2="40" stroke="#ff7b4e" stroke-width=".6" opacity=".2"/>
-                <line x1="60" y1="8" x2="60" y2="72" stroke="#ff7b4e" stroke-width=".6" opacity=".2"/>
-                <text x="60" y="44" text-anchor="middle" fill="#ff6fa8" font-size="9" font-family="Georgia" opacity=".6">POSTER</text>
+              <!-- KSP Techheads: two phone mockups with event app UI -->
+              <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Phone 1 (left, slightly tilted back) -->
+                <g transform="translate(68,18) rotate(-4,62,107)">
+                  <rect width="124" height="214" rx="18" fill="#111122" stroke="#444" stroke-width="2"/>
+                  <rect x="8" y="8" width="108" height="198" rx="12" fill="#1a1a3e"/>
+                  <!-- Notch -->
+                  <rect x="42" y="10" width="40" height="8" rx="4" fill="#111122"/>
+                  <!-- Event header -->
+                  <rect x="8" y="26" width="108" height="40" rx="4" fill="#6c3fc0"/>
+                  <rect x="16" y="32" width="60" height="7" rx="3.5" fill="rgba(255,255,255,.8)"/>
+                  <rect x="16" y="44" width="40" height="5" rx="2.5" fill="rgba(255,255,255,.4)"/>
+                  <!-- Event cards -->
+                  <rect x="12" y="72" width="100" height="36" rx="8" fill="#252560"/>
+                  <rect x="18" y="78" width="28" height="24" rx="4" fill="#6c3fc0" opacity=".7"/>
+                  <rect x="52" y="80" width="52" height="6" rx="3" fill="rgba(255,255,255,.7)"/>
+                  <rect x="52" y="90" width="38" height="5" rx="2.5" fill="rgba(255,255,255,.3)"/>
+                  <rect x="12" y="114" width="100" height="36" rx="8" fill="#252560"/>
+                  <rect x="18" y="120" width="28" height="24" rx="4" fill="#3f7cc0" opacity=".7"/>
+                  <rect x="52" y="122" width="52" height="6" rx="3" fill="rgba(255,255,255,.7)"/>
+                  <rect x="52" y="132" width="38" height="5" rx="2.5" fill="rgba(255,255,255,.3)"/>
+                  <rect x="12" y="156" width="100" height="36" rx="8" fill="#252560"/>
+                  <rect x="18" y="162" width="28" height="24" rx="4" fill="#c03f7c" opacity=".7"/>
+                  <rect x="52" y="164" width="52" height="6" rx="3" fill="rgba(255,255,255,.7)"/>
+                  <rect x="52" y="174" width="38" height="5" rx="2.5" fill="rgba(255,255,255,.3)"/>
+                  <!-- Home bar -->
+                  <rect x="42" y="200" width="40" height="3" rx="1.5" fill="rgba(255,255,255,.2)"/>
+                </g>
+                <!-- Phone 2 (right, slightly tilted forward) -->
+                <g transform="translate(210,10) rotate(4,62,107)">
+                  <rect width="124" height="214" rx="18" fill="#111122" stroke="#666" stroke-width="2"/>
+                  <rect x="8" y="8" width="108" height="198" rx="12" fill="#0f0f2a"/>
+                  <!-- Notch -->
+                  <rect x="42" y="10" width="40" height="8" rx="4" fill="#111122"/>
+                  <!-- Top hero image -->
+                  <rect x="8" y="26" width="108" height="70" rx="4" fill="#2d1b6e"/>
+                  <circle cx="62" cy="55" r="20" fill="#6c3fc0" opacity=".5"/>
+                  <circle cx="62" cy="55" r="12" fill="#9b59e8" opacity=".7"/>
+                  <rect x="30" y="82" width="70" height="8" rx="4" fill="rgba(255,255,255,.8)"/>
+                  <rect x="38" y="94" width="54" height="5" rx="2.5" fill="rgba(255,255,255,.35)"/>
+                  <!-- Ticket button -->
+                  <rect x="18" y="106" width="88" height="22" rx="11" fill="#6c3fc0"/>
+                  <rect x="34" y="112" width="56" height="8" rx="4" fill="rgba(255,255,255,.8)"/>
+                  <!-- Lineup list -->
+                  <rect x="12" y="136" width="100" height="1" fill="rgba(255,255,255,.1)"/>
+                  <rect x="12" y="143" width="24" height="24" rx="12" fill="#6c3fc0" opacity=".5"/>
+                  <rect x="42" y="147" width="55" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+                  <rect x="42" y="157" width="36" height="4" rx="2" fill="rgba(255,255,255,.25)"/>
+                  <rect x="12" y="173" width="24" height="24" rx="12" fill="#3f7cc0" opacity=".5"/>
+                  <rect x="42" y="177" width="55" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+                  <rect x="42" y="187" width="36" height="4" rx="2" fill="rgba(255,255,255,.25)"/>
+                  <!-- Home bar -->
+                  <rect x="42" y="200" width="40" height="3" rx="1.5" fill="rgba(255,255,255,.2)"/>
+                </g>
               </svg>
             </div>
           </div>
@@ -1241,11 +1330,52 @@
         <div class="project-img">
           <div class="project-img-inner">
             <div class="proj-visual proj-visual-3">
-              <svg viewBox="0 0 120 80" fill="none">
-                <polygon points="60,12 108,68 12,68" stroke="#ffb347" stroke-width="1" opacity=".45" fill="none"/>
-                <polygon points="60,22 96,64 24,64" stroke="#ff7b4e" stroke-width=".7" opacity=".28" fill="#ff7b4e" fill-opacity=".05"/>
-                <circle cx="60" cy="44" r="8" fill="#ff6fa8" opacity=".18" stroke="#ff6fa8" stroke-width=".8"/>
-                <line x1="60" y1="12" x2="60" y2="36" stroke="#ffb347" stroke-width=".7" opacity=".35"/>
+              <!-- MyBrain: iPad mockup with note/brain app UI -->
+              <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- iPad frame -->
+                <rect x="30" y="12" width="340" height="226" rx="20" fill="#1c1c1e" stroke="#555" stroke-width="2.5"/>
+                <!-- Screen -->
+                <rect x="42" y="22" width="316" height="206" rx="12" fill="#fefcff"/>
+                <!-- Home button / camera -->
+                <circle cx="200" cy="228" r="0" fill="none"/>
+                <circle cx="200" cy="14" r="3" fill="#444"/>
+                <!-- App top bar -->
+                <rect x="42" y="22" width="316" height="28" fill="#f8f4ff"/>
+                <rect x="52" y="30" width="70" height="10" rx="5" fill="#9b59e8" opacity=".5"/>
+                <rect x="314" y="28" width="36" height="14" rx="7" fill="#9b59e8" opacity=".2"/>
+                <!-- Sidebar -->
+                <rect x="42" y="50" width="88" height="178" fill="#f4f0ff"/>
+                <rect x="50" y="60" width="68" height="8" rx="4" fill="#9b59e8" opacity=".7"/>
+                <rect x="50" y="76" width="58" height="6" rx="3" fill="#bbb" opacity=".6"/>
+                <rect x="50" y="89" width="52" height="6" rx="3" fill="#bbb" opacity=".5"/>
+                <rect x="50" y="102" width="62" height="6" rx="3" fill="#bbb" opacity=".45"/>
+                <rect x="50" y="115" width="46" height="6" rx="3" fill="#bbb" opacity=".4"/>
+                <rect x="50" y="136" width="68" height="8" rx="4" fill="#9b59e8" opacity=".3"/>
+                <rect x="50" y="152" width="48" height="6" rx="3" fill="#bbb" opacity=".4"/>
+                <rect x="50" y="165" width="56" height="6" rx="3" fill="#bbb" opacity=".35"/>
+                <!-- Main: note title -->
+                <rect x="140" y="58" width="200" height="14" rx="5" fill="#1c1c1e" opacity=".75"/>
+                <rect x="140" y="78" width="150" height="7" rx="3.5" fill="#888" opacity=".4"/>
+                <!-- Note body lines -->
+                <rect x="140" y="96" width="208" height="5" rx="2.5" fill="#9b59e8" opacity=".15"/>
+                <rect x="140" y="107" width="195" height="5" rx="2.5" fill="#ccc" opacity=".6"/>
+                <rect x="140" y="118" width="210" height="5" rx="2.5" fill="#ccc" opacity=".55"/>
+                <rect x="140" y="129" width="180" height="5" rx="2.5" fill="#ccc" opacity=".5"/>
+                <rect x="140" y="140" width="200" height="5" rx="2.5" fill="#ccc" opacity=".45"/>
+                <!-- Tag chips -->
+                <rect x="140" y="158" width="44" height="14" rx="7" fill="#9b59e8" opacity=".18"/>
+                <rect x="190" y="158" width="56" height="14" rx="7" fill="#3f7cc0" opacity=".18"/>
+                <rect x="252" y="158" width="38" height="14" rx="7" fill="#c03f7c" opacity=".18"/>
+                <!-- Divider -->
+                <rect x="140" y="180" width="208" height="1" fill="#e8e0f8"/>
+                <!-- Mind map node cluster -->
+                <circle cx="200" cy="208" r="10" fill="#9b59e8" opacity=".2" stroke="#9b59e8" stroke-width="1.2" opacity=".5"/>
+                <circle cx="240" cy="200" r="7" fill="#3f7cc0" opacity=".2" stroke="#3f7cc0" stroke-width="1" opacity=".4"/>
+                <circle cx="165" cy="202" r="7" fill="#c03f7c" opacity=".2" stroke="#c03f7c" stroke-width="1" opacity=".4"/>
+                <circle cx="310" cy="207" r="5" fill="#9b59e8" opacity=".15" stroke="#9b59e8" stroke-width="1" opacity=".3"/>
+                <line x1="210" y1="207" x2="233" y2="202" stroke="#9b59e8" stroke-width="1" opacity=".3"/>
+                <line x1="190" y1="207" x2="172" y2="204" stroke="#9b59e8" stroke-width="1" opacity=".3"/>
+                <line x1="247" y1="200" x2="305" y2="206" stroke="#3f7cc0" stroke-width="1" opacity=".25"/>
               </svg>
             </div>
           </div>
@@ -1275,16 +1405,58 @@
         <div class="project-img">
           <div class="project-img-inner">
             <div class="proj-visual proj-visual-4">
-              <svg viewBox="0 0 120 80" fill="none">
-                <rect x="15" y="10" width="90" height="60" rx="5" stroke="#ff7b4e" stroke-width="1" opacity=".4"/>
-                <rect x="15" y="10" width="90" height="14" rx="5" fill="#ff7b4e" opacity=".08"/>
-                <circle cx="24" cy="17" r="2.5" fill="#ff6fa8" opacity=".55"/>
-                <circle cx="32" cy="17" r="2.5" fill="#ff7b4e" opacity=".4"/>
-                <circle cx="40" cy="17" r="2.5" fill="#ffb347" opacity=".3"/>
-                <rect x="22" y="32" width="35" height="5" rx="2.5" fill="#ff6fa8" opacity=".2"/>
-                <rect x="22" y="42" width="50" height="3" rx="1.5" fill="#ff7b4e" opacity=".12"/>
-                <rect x="22" y="50" width="42" height="3" rx="1.5" fill="#ff7b4e" opacity=".12"/>
-                <rect x="72" y="32" width="26" height="26" rx="4" fill="#ffb347" opacity=".07" stroke="#ffb347" stroke-width=".6"/>
+              <!-- Passion Project: laptop with creative/design tool UI -->
+              <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Laptop screen -->
+                <rect x="40" y="14" width="280" height="180" rx="10" fill="#1c1c1e" stroke="#666" stroke-width="2"/>
+                <!-- Screen glass -->
+                <rect x="50" y="24" width="260" height="160" rx="5" fill="#fffbf5"/>
+                <!-- Top toolbar -->
+                <rect x="50" y="24" width="260" height="22" rx="5" fill="#f5f0e8"/>
+                <circle cx="62" cy="35" r="4" fill="#ff5f57"/>
+                <circle cx="76" cy="35" r="4" fill="#febc2e"/>
+                <circle cx="90" cy="35" r="4" fill="#28c840"/>
+                <!-- Tool icons row -->
+                <rect x="108" y="30" width="10" height="10" rx="2" fill="#d97706" opacity=".5"/>
+                <circle cx="128" cy="35" r="5" fill="none" stroke="#d97706" stroke-width="1.2" opacity=".5"/>
+                <line x1="140" y1="30" x2="148" y2="40" stroke="#d97706" stroke-width="1.2" opacity=".5"/>
+                <rect x="155" y="31" width="8" height="8" rx="1" fill="none" stroke="#d97706" stroke-width="1.2" opacity=".4"/>
+                <!-- Left tool panel -->
+                <rect x="50" y="46" width="30" height="138" fill="#f0ebe0"/>
+                <circle cx="65" cy="58" r="6" fill="#d97706" opacity=".4"/>
+                <rect x="57" y="72" width="16" height="10" rx="2" fill="#d97706" opacity=".3"/>
+                <circle cx="65" cy="92" r="6" fill="none" stroke="#d97706" stroke-width="1.2" opacity=".3"/>
+                <line x1="58" y1="108" x2="72" y2="108" stroke="#d97706" stroke-width="1.2" opacity=".3"/>
+                <line x1="65" y1="102" x2="65" y2="114" stroke="#d97706" stroke-width="1.2" opacity=".3"/>
+                <!-- Canvas area -->
+                <rect x="80" y="46" width="230" height="138" fill="#fff9f0"/>
+                <!-- Canvas grid dots -->
+                <circle cx="100" cy="66" r="1" fill="#e0d0b8" opacity=".6"/>
+                <circle cx="120" cy="66" r="1" fill="#e0d0b8" opacity=".6"/>
+                <circle cx="140" cy="66" r="1" fill="#e0d0b8" opacity=".6"/>
+                <circle cx="100" cy="86" r="1" fill="#e0d0b8" opacity=".6"/>
+                <circle cx="120" cy="86" r="1" fill="#e0d0b8" opacity=".6"/>
+                <circle cx="140" cy="86" r="1" fill="#e0d0b8" opacity=".6"/>
+                <!-- Design elements on canvas -->
+                <rect x="95" y="74" width="90" height="55" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" opacity=".7"/>
+                <rect x="103" y="82" width="50" height="8" rx="4" fill="#d97706" opacity=".5"/>
+                <rect x="103" y="95" width="70" height="5" rx="2.5" fill="#d97706" opacity=".25"/>
+                <rect x="103" y="105" width="60" height="5" rx="2.5" fill="#d97706" opacity=".2"/>
+                <!-- Floating shape -->
+                <circle cx="220" cy="100" r="30" fill="none" stroke="#f59e0b" stroke-width="2" opacity=".45"/>
+                <circle cx="220" cy="100" r="18" fill="#fde68a" opacity=".35"/>
+                <!-- Color swatches top right -->
+                <circle cx="278" cy="56" r="5" fill="#f59e0b"/>
+                <circle cx="291" cy="56" r="5" fill="#d97706"/>
+                <circle cx="304" cy="56" r="5" fill="#92400e"/>
+                <!-- Selection handles on rect -->
+                <circle cx="95" cy="74" r="3" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+                <circle cx="185" cy="74" r="3" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+                <circle cx="95" cy="129" r="3" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+                <circle cx="185" cy="129" r="3" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+                <!-- Laptop base -->
+                <path d="M10 194 L390 194 L372 212 L28 212 Z" fill="#2a2a2e" stroke="#666" stroke-width="1.5"/>
+                <rect x="170" y="192" width="60" height="5" rx="2.5" fill="#3a3a3e"/>
               </svg>
             </div>
           </div>
