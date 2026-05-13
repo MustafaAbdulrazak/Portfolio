@@ -924,6 +924,143 @@
       transition: transform .85s cubic-bezier(.22,1,.36,1), opacity .5s ease;
     }
     .heading-reveal.visible span { transform: translateY(0); opacity: 1; }
+
+    /* ─── CASE STUDY MODAL ─── */
+    .case-modal {
+      position: fixed; inset: 0; z-index: 900;
+      background: var(--bg);
+      transform: translateY(100%);
+      transition: transform .55s cubic-bezier(.16,1,.3,1);
+      overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .case-modal.open { transform: translateY(0); }
+
+    .case-modal-bar {
+      position: sticky; top: 0; z-index: 10;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem,5vw,4rem);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .case-modal-label {
+      font-size: .68rem; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .case-close {
+      width: 40px; height: 40px;
+      border: 1px solid var(--border); border-radius: 50%;
+      background: var(--surface2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: var(--muted); line-height: 1;
+      transition: background .2s, color .2s, border-color .2s, transform .2s;
+    }
+    .case-close:hover {
+      background: var(--text); color: var(--bg);
+      border-color: var(--text); transform: rotate(90deg);
+    }
+
+    .case-body {
+      max-width: 860px; margin: 0 auto;
+      padding: 4rem clamp(1.5rem,5vw,4rem) 8rem;
+    }
+
+    /* Hero band */
+    .case-hero-band {
+      width: calc(100% + clamp(3rem,10vw,8rem));
+      margin-left: calc(-1 * clamp(1.5rem,5vw,4rem));
+      height: clamp(220px, 32vw, 420px);
+      border-radius: 0 0 20px 20px;
+      margin-bottom: 3rem;
+      position: relative; overflow: hidden;
+    }
+    .case-hero-band-inner {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .case-hero-band svg { width: 100%; height: 100%; }
+
+    /* Meta row */
+    .case-meta {
+      display: flex; flex-wrap: wrap; gap: 1rem 3rem;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .case-meta-item { display: flex; flex-direction: column; gap: .3rem; }
+    .case-meta-label {
+      font-size: .62rem; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .case-meta-value { font-size: .9rem; font-weight: 500; color: var(--text); }
+
+    /* Title */
+    .case-title {
+      font-size: clamp(2rem,5vw,3.2rem);
+      font-family: 'Funnel Display', Georgia, serif;
+      font-weight: 500; letter-spacing: -.02em;
+      line-height: 1.1; margin-bottom: 1.5rem;
+    }
+
+    /* Sections */
+    .case-section { margin-bottom: 3.5rem; }
+    .case-section-label {
+      font-size: .65rem; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: .8rem;
+    }
+    .case-section h3 {
+      font-size: 1.25rem;
+      font-family: 'Funnel Display', Georgia, serif;
+      font-weight: 500; margin-bottom: .8rem;
+    }
+    .case-section p {
+      font-family: 'Poppins', sans-serif;
+      font-size: .9rem; line-height: 1.85;
+      color: var(--muted); max-width: 680px;
+    }
+    .case-section p + p { margin-top: .75rem; }
+
+    /* Process steps */
+    .case-steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem; margin-top: 1.2rem;
+    }
+    .case-step {
+      background: var(--surface2); border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid var(--border);
+    }
+    .case-step-num {
+      font-size: .58rem; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .case-step-name {
+      font-weight: 600; font-size: .88rem; color: var(--text);
+    }
+
+    /* Outcome tags */
+    .case-outcomes {
+      display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem;
+    }
+    .case-outcome-tag {
+      padding: .45rem 1rem;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      font-size: .78rem; font-weight: 500; color: var(--accent);
+    }
+
+    /* Divider */
+    .case-divider {
+      width: 100%; height: 1px;
+      background: var(--border); margin: 3rem 0;
+    }
+
+    /* project card clickable */
+    .project-card { cursor: pointer; }
   </style>
 </head>
 <body>
@@ -1605,6 +1742,232 @@
         el.addEventListener('animationend', () => el.remove());
       });
     });
+
+    /* ─── Case study modal ─── */
+    const PROJECTS = {
+      '1': {
+        title: 'Feedbird Brand Identity',
+        tags: ['Branding', 'Identity'],
+        year: '2024',
+        role: 'Lead Designer',
+        bandColor: '#e8522a',
+        bandAccent: '#ff6fa8',
+        bandSvg: `<svg viewBox="0 0 860 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="860" height="380" fill="#FDF9F6"/>
+          <circle cx="430" cy="190" r="260" stroke="#e8522a" stroke-width="1" opacity=".12"/>
+          <circle cx="430" cy="190" r="180" stroke="#e8522a" stroke-width="1" opacity=".1"/>
+          <rect x="270" y="110" width="320" height="160" rx="16" fill="#e8522a" fill-opacity=".06" stroke="#e8522a" stroke-width="1.2" opacity=".4"/>
+          <rect x="310" y="140" width="90" height="12" rx="6" fill="#e8522a" opacity=".5"/>
+          <rect x="310" y="162" width="140" height="7" rx="3.5" fill="#e8522a" opacity=".25"/>
+          <rect x="310" y="177" width="110" height="7" rx="3.5" fill="#e8522a" opacity=".2"/>
+          <circle cx="520" cy="175" r="30" fill="#ff6fa8" fill-opacity=".12" stroke="#ff6fa8" stroke-width="1" opacity=".4"/>
+          <path d="M506 175 L520 161 L534 175 L520 189 Z" stroke="#ff6fa8" stroke-width="1.2" fill="none" opacity=".5"/>
+          <rect x="310" y="200" width="200" height="2" rx="1" fill="#e8522a" opacity=".12"/>
+          <rect x="310" y="212" width="160" height="2" rx="1" fill="#e8522a" opacity=".1"/>
+          <text x="430" y="310" text-anchor="middle" fill="#e8522a" font-size="11" font-family="Georgia" opacity=".3" letter-spacing="4">FEEDBIRD · BRAND SYSTEM</text>
+        </svg>`,
+        overview: `Feedbird is a social media scheduling tool for small businesses and creators. The brief was to build a visual identity system that felt professional and trustworthy while remaining friendly and approachable — a tone that works equally well on a product interface, a pitch deck, and printed materials.`,
+        challenge: `The existing "brand" was a stock logo and an inconsistent colour palette that changed across touchpoints. The client needed something cohesive that could scale — from app UI to invoice templates to trade show banners — without losing personality.`,
+        process: ['Discovery & Research', 'Moodboard & Direction', 'Logo Exploration', 'Colour & Type System', 'Brand Guidelines'],
+        processDetail: `I ran three stakeholder workshops to align on brand values (Reliable, Friendly, Modern), then produced two distinct visual directions. The chosen direction anchored on a warm coral palette with geometric letterforms. A six-week sprint covered logo refinement, a full colour token system, typography pairing, icon style, and photo treatment rules.`,
+        outcomes: ['Logo Suite (primary, compact, icon)', 'Colour Token System', 'Typography Scale', '50-page Brand Guidelines', 'UI Component Tokens'],
+      },
+      '2': {
+        title: 'Typographic Poster Series',
+        tags: ['Print', 'Typography'],
+        year: '2024',
+        role: 'Art Direction & Design',
+        bandColor: '#ff6fa8',
+        bandAccent: '#ff7b4e',
+        bandSvg: `<svg viewBox="0 0 860 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="860" height="380" fill="#FDF9F8"/>
+          <line x1="0" y1="95" x2="860" y2="95" stroke="#ff6fa8" stroke-width="1" opacity=".18"/>
+          <line x1="0" y1="190" x2="860" y2="190" stroke="#ff6fa8" stroke-width="1" opacity=".18"/>
+          <line x1="0" y1="285" x2="860" y2="285" stroke="#ff6fa8" stroke-width="1" opacity=".18"/>
+          <line x1="215" y1="0" x2="215" y2="380" stroke="#ff6fa8" stroke-width="1" opacity=".18"/>
+          <line x1="430" y1="0" x2="430" y2="380" stroke="#ff6fa8" stroke-width="1" opacity=".18"/>
+          <line x1="645" y1="0" x2="645" y2="380" stroke="#ff6fa8" stroke-width="1" opacity=".18"/>
+          <rect x="120" y="60" width="200" height="260" rx="4" fill="none" stroke="#ff6fa8" stroke-width="1.5" opacity=".45"/>
+          <text x="220" y="155" text-anchor="middle" fill="#ff6fa8" font-size="48" font-family="Georgia" font-style="italic" opacity=".7">Aa</text>
+          <text x="220" y="195" text-anchor="middle" fill="#ff7b4e" font-size="9" font-family="Georgia" opacity=".5" letter-spacing="5">BRUTALIST</text>
+          <rect x="340" y="90" width="200" height="200" rx="4" fill="none" stroke="#ff7b4e" stroke-width="1.5" opacity=".4"/>
+          <text x="440" y="200" text-anchor="middle" fill="#ff7b4e" font-size="64" font-family="Georgia" font-weight="bold" opacity=".65">B</text>
+          <rect x="560" y="70" width="200" height="240" rx="4" fill="none" stroke="#ff6fa8" stroke-width="1.5" opacity=".35"/>
+          <text x="660" y="185" text-anchor="middle" fill="#ff6fa8" font-size="36" font-family="Georgia" opacity=".6">01/03</text>
+          <text x="660" y="215" text-anchor="middle" fill="#ff7b4e" font-size="9" opacity=".4" letter-spacing="3">GRID × GESTURE</text>
+        </svg>`,
+        overview: `A three-part poster series created for a design exhibition exploring the tension between rigid brutalist grid systems and expressive hand-influenced typography. Each poster in the series isolates one relationship: structure vs. gesture, weight vs. space, and system vs. exception.`,
+        challenge: `The curatorial brief asked for work that "argued with itself visually." The challenge was designing pieces that felt both disciplined and alive — where the grid is visible but the type breaks it intentionally, without the result feeling chaotic or arbitrary.`,
+        process: ['Exhibition Brief Analysis', 'Grid System Design', 'Type Exploration', 'Colour Theory', 'Print Proofing'],
+        processDetail: `Each poster was built on a strict modular grid (9×12 units), then the typographic element was allowed to violate exactly one grid rule per piece. The colour palette was restricted to two spot colours per poster to reinforce the idea of constraint. Multiple rounds of large-format print proofing were essential — colour behaviour on uncoated stock changed the feel significantly.`,
+        outcomes: ['3 large-format exhibition posters (A1)', 'Exhibited at Nordic Design Week 2024', 'Featured in design press', 'Limited edition print run'],
+      },
+      '3': {
+        title: 'Movie Poster — Original Concept',
+        tags: ['Illustration', 'Digital Art'],
+        year: '2023',
+        role: 'Illustrator & Designer',
+        bandColor: '#ffb347',
+        bandAccent: '#ff6fa8',
+        bandSvg: `<svg viewBox="0 0 860 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="860" height="380" fill="#0d0c0a"/>
+          <radialGradient id="mg1" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#ffb347" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#0d0c0a" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="860" height="380" fill="url(#mg1)"/>
+          <polygon points="430,80 580,300 280,300" stroke="#ffb347" stroke-width="1.5" opacity=".5" fill="none"/>
+          <polygon points="430,120 545,280 315,280" stroke="#ff6fa8" stroke-width=".8" opacity=".3" fill="none"/>
+          <circle cx="430" cy="200" r="50" fill="#ffb347" fill-opacity=".06" stroke="#ffb347" stroke-width="1" opacity=".4"/>
+          <line x1="430" y1="80" x2="430" y2="150" stroke="#ffb347" stroke-width="1" opacity=".5"/>
+          <circle cx="430" cy="155" r="4" fill="#ffb347" opacity=".7"/>
+          <text x="430" y="340" text-anchor="middle" fill="#ffb347" font-size="10" font-family="Georgia" opacity=".35" letter-spacing="6">ORIGINAL CONCEPT · 2023</text>
+          <line x1="130" y1="190" x2="320" y2="190" stroke="#ffb347" stroke-width=".6" opacity=".2"/>
+          <line x1="540" y1="190" x2="730" y2="190" stroke="#ffb347" stroke-width=".6" opacity=".2"/>
+        </svg>`,
+        overview: `A conceptual movie poster for an original film idea — a psychological thriller about isolation and duality. The brief I set myself: create a poster that tells the entire emotional arc of a story that doesn't yet exist, using only composition, light, and symbolic geometry.`,
+        challenge: `Without a studio or IP to anchor the piece, every visual decision had to carry narrative weight independently. The challenge was achieving a sense of cinematic atmosphere — the feeling of a film you want to see — through pure formal design decisions.`,
+        process: ['Concept & Story Development', 'Compositional Sketches', 'Digital Painting', 'Colour Grading', 'Typographic Treatment'],
+        processDetail: `I started with 20+ rough thumbnail compositions before settling on a vertical triangular structure that suggests both a roof/shelter and a warning symbol. The central figure is abstracted — enough detail to feel human, abstract enough to project onto. Colour grading went through seven rounds, testing warm-to-cold shifts and how they affected the implied narrative tone.`,
+        outcomes: ['Final poster (print-ready, A0)', 'Alternate colourway', 'Portfolio centrepiece', 'Referenced in client briefs as tone reference'],
+      },
+      '4': {
+        title: 'Mainbot — Dashboard Design',
+        tags: ['UX/UI', 'Product'],
+        year: '2023',
+        role: 'UX Lead',
+        bandColor: '#ff7b4e',
+        bandAccent: '#ffb347',
+        bandSvg: `<svg viewBox="0 0 860 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="860" height="380" fill="#FAFAF9"/>
+          <rect x="80" y="60" width="700" height="260" rx="12" fill="white" stroke="#e5e0da" stroke-width="1.2"/>
+          <rect x="80" y="60" width="700" height="40" rx="12" fill="#ff7b4e" fill-opacity=".07"/>
+          <rect x="80" y="88" width="700" height="12" fill="#ff7b4e" fill-opacity=".04"/>
+          <circle cx="105" cy="80" r="5" fill="#ff6fa8" opacity=".6"/>
+          <circle cx="122" cy="80" r="5" fill="#ff7b4e" opacity=".45"/>
+          <circle cx="139" cy="80" r="5" fill="#ffb347" opacity=".35"/>
+          <rect x="165" y="72" width="80" height="16" rx="3" fill="#ff7b4e" fill-opacity=".12"/>
+          <rect x="100" y="120" width="160" height="180" rx="8" fill="#ff7b4e" fill-opacity=".05" stroke="#ff7b4e" stroke-width=".8" opacity=".3"/>
+          <rect x="110" y="132" width="60" height="8" rx="4" fill="#ff7b4e" opacity=".35"/>
+          <rect x="110" y="148" width="100" height="5" rx="2.5" fill="#ff7b4e" opacity=".15"/>
+          <rect x="110" y="162" width="80" height="5" rx="2.5" fill="#ff7b4e" opacity=".12"/>
+          <rect x="110" y="180" width="140" height="90" rx="6" fill="#ff7b4e" fill-opacity=".04"/>
+          <polyline points="120,255 140,230 160,240 180,210 200,225 220,195 240,215" stroke="#ff7b4e" stroke-width="1.5" fill="none" opacity=".5"/>
+          <rect x="280" y="120" width="480" height="80" rx="8" fill="#ff7b4e" fill-opacity=".04" stroke="#ff7b4e" stroke-width=".7" opacity=".25"/>
+          <rect x="296" y="136" width="140" height="8" rx="4" fill="#ff7b4e" opacity=".3"/>
+          <rect x="296" y="152" width="200" height="5" rx="2.5" fill="#ff7b4e" opacity=".14"/>
+          <rect x="296" y="164" width="160" height="5" rx="2.5" fill="#ff7b4e" opacity=".11"/>
+          <rect x="280" y="214" width="150" height="70" rx="8" fill="#ff6fa8" fill-opacity=".06" stroke="#ff6fa8" stroke-width=".7" opacity=".3"/>
+          <rect x="296" y="228" width="80" height="6" rx="3" fill="#ff6fa8" opacity=".3"/>
+          <text x="310" y="268" fill="#ff6fa8" font-size="18" font-family="Georgia" font-weight="bold" opacity=".4">84%</text>
+          <rect x="446" y="214" width="150" height="70" rx="8" fill="#ffb347" fill-opacity=".06" stroke="#ffb347" stroke-width=".7" opacity=".3"/>
+          <rect x="462" y="228" width="80" height="6" rx="3" fill="#ffb347" opacity=".3"/>
+          <text x="476" y="268" fill="#ffb347" font-size="18" font-family="Georgia" font-weight="bold" opacity=".4">2.3k</text>
+          <rect x="612" y="214" width="148" height="70" rx="8" fill="#ff7b4e" fill-opacity=".06" stroke="#ff7b4e" stroke-width=".7" opacity=".3"/>
+          <rect x="628" y="228" width="80" height="6" rx="3" fill="#ff7b4e" opacity=".3"/>
+          <text x="642" y="268" fill="#ff7b4e" font-size="18" font-family="Georgia" font-weight="bold" opacity=".4">↑12%</text>
+        </svg>`,
+        overview: `Mainbot is an AI-powered operations assistant for mid-size businesses. The product needed a complete dashboard redesign — the existing interface had grown organically and was drowning users in data without giving them clear actions to take.`,
+        challenge: `The core tension: power users needed access to raw data and advanced filtering, while executive users needed an at-a-glance summary that took under 30 seconds to read. Building one interface that served both without mode-switching or separate products was the central design problem.`,
+        process: ['User Research & Interviews', 'Information Architecture', 'Low-fi Wireframes', 'Prototype & User Testing', 'High-fidelity Design', 'Dev Handoff'],
+        processDetail: `I interviewed 14 current users across three job roles (Operations Manager, CFO, Admin). The key insight was that executives spent 80% of their dashboard time on just three metrics — so the new design surfaced those three immediately, with depth available on demand. A component library of 60+ elements was built in Figma with detailed interaction specs and a token-based design system for the dev team.`,
+        outcomes: ['Full dashboard redesign (shipped)', '60+ Figma component library', 'Design token system', '34% reduction in time-to-insight (user testing)', 'Component handoff documentation'],
+      },
+    };
+
+    const modal     = document.getElementById('caseModal');
+    const caseBody  = document.getElementById('caseContent');
+
+    function openCase(id) {
+      const p = PROJECTS[id];
+      if (!p) return;
+
+      const stepsHtml = p.process.map((s, i) =>
+        `<div class="case-step"><div class="case-step-num">Step ${String(i+1).padStart(2,'0')}</div><div class="case-step-name">${s}</div></div>`
+      ).join('');
+
+      const outcomesHtml = p.outcomes.map(o =>
+        `<span class="case-outcome-tag">${o}</span>`
+      ).join('');
+
+      caseBody.innerHTML = `
+        <div class="case-hero-band">
+          <div class="case-hero-band-inner">${p.bandSvg}</div>
+        </div>
+
+        <div class="case-meta">
+          <div class="case-meta-item">
+            <span class="case-meta-label">Category</span>
+            <span class="case-meta-value">${p.tags.join(' · ')}</span>
+          </div>
+          <div class="case-meta-item">
+            <span class="case-meta-label">Year</span>
+            <span class="case-meta-value">${p.year}</span>
+          </div>
+          <div class="case-meta-item">
+            <span class="case-meta-label">Role</span>
+            <span class="case-meta-value">${p.role}</span>
+          </div>
+        </div>
+
+        <h1 class="case-title">${p.title}</h1>
+        <div class="case-divider"></div>
+
+        <div class="case-section">
+          <p class="case-section-label">Overview</p>
+          <p>${p.overview}</p>
+        </div>
+
+        <div class="case-section">
+          <p class="case-section-label">The Challenge</p>
+          <p>${p.challenge}</p>
+        </div>
+
+        <div class="case-section">
+          <p class="case-section-label">Process</p>
+          <div class="case-steps">${stepsHtml}</div>
+          <p style="margin-top:1.2rem">${p.processDetail}</p>
+        </div>
+
+        <div class="case-section">
+          <p class="case-section-label">Outcomes</p>
+          <div class="case-outcomes">${outcomesHtml}</div>
+        </div>
+      `;
+
+      modal.scrollTop = 0;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCase() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Wire up cards
+    document.querySelectorAll('.project-card').forEach((card, i) => {
+      card.setAttribute('data-caseid', i + 1);
+      card.addEventListener('click', () => openCase(card.dataset.caseid));
+    });
+
+    // Close on backdrop (clicking outside the inner scrollable area doesn't apply here
+    // since modal is full-screen — ESC handles it)
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeCase();
+    });
   </script>
+
+  <!-- ─── CASE STUDY MODAL ─── -->
+  <div id="caseModal" class="case-modal" role="dialog" aria-modal="true" aria-label="Case study">
+    <div class="case-modal-bar">
+      <span class="case-modal-label">Case Study</span>
+      <button class="case-close" onclick="closeCase()" aria-label="Close">✕</button>
+    </div>
+    <div class="case-body">
+      <div id="caseContent"></div>
+    </div>
+  </div>
+
 </body>
 </html>
