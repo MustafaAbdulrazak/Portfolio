@@ -1482,6 +1482,17 @@
     <svg viewBox="0 0 18 18" fill="none" stroke-width="1.8"><path d="M9 14V4M4 9l5-5 5 5"/></svg>
   </button>
 
+  <!-- ─── CASE STUDY MODAL (must be before <script>) ─── -->
+  <div id="caseModal" class="case-modal" role="dialog" aria-modal="true" aria-label="Case study">
+    <div class="case-modal-bar">
+      <span class="case-modal-label">Case Study</span>
+      <button class="case-close" onclick="closeCase()" aria-label="Close">✕</button>
+    </div>
+    <div class="case-body">
+      <div id="caseContent"></div>
+    </div>
+  </div>
+
   <script>
     /* ─── Theme ─── */
     (function(){ if(localStorage.getItem('theme')==='dark') document.documentElement.classList.add('dark'); })();
@@ -1957,17 +1968,6 @@
       if (e.key === 'Escape') closeCase();
     });
   </script>
-
-  <!-- ─── CASE STUDY MODAL ─── -->
-  <div id="caseModal" class="case-modal" role="dialog" aria-modal="true" aria-label="Case study">
-    <div class="case-modal-bar">
-      <span class="case-modal-label">Case Study</span>
-      <button class="case-close" onclick="closeCase()" aria-label="Close">✕</button>
-    </div>
-    <div class="case-body">
-      <div id="caseContent"></div>
-    </div>
-  </div>
 
 </body>
 </html>
